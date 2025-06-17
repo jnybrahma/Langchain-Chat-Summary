@@ -6,7 +6,7 @@ import time
 import os
 from dotenv import load_dotenv
 import openai
-from openai.error import AuthenticationError
+from openai import AuthenticationError
 
 from langchain.memory import ConversationSummaryMemory
 from langchain.chains import ConversationChain
