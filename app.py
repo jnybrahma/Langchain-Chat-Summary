@@ -5,6 +5,8 @@ import streamlit as st
 import time
 import os
 from dotenv import load_dotenv
+import openai
+from openai.error import AuthenticationError
 
 from langchain.memory import ConversationSummaryMemory
 from langchain.chains import ConversationChain
@@ -39,7 +41,16 @@ else:
 if len(openai_api_key) == 0 :
     "Please provide valid OpenAI API Key to use the app!!"
     st.stop()
-
+    
+if openai_api_key:
+    try:
+        # Attempt to list models to validate the API key
+        openai.api_key = openai_api_key
+        openai.Model.list()
+    except AuthenticationError:
+        st.error("Invalid OpenAI API key provided. Please check your key.")
+        st.stop()
+        
 # print(type(openai_api_key))
 # st.stop()
 ### 2. Define utility functions to invoke the LLM
@@ -53,8 +64,16 @@ def  get_summarization_llm():
 # Create an instance of the LLM for chatbot responses
 @st.cache_resource
 def  get_llm():
-     model = 'gpt-3.5-turbo-0125'
-     return ChatOpenAI(model=model, openai_api_key=openai_api_key) 
+    try:
+        model = 'gpt-3.5-turbo-0125'
+        # Attempt to create a ChatOpenAI instance to validate the API key
+        openai.api_key = openai_api_key
+        # If the API key is invalid, this will raise an AuthenticationError
+        openai.Model.list()  # This checks if the API key is valid
+        return ChatOpenAI(model=model, openai_api_key=openai_api_key)
+    except AuthenticationError:
+        st.error("Invalid OpenAI API key provided. Please check your key.")
+        st.stop()
 
 @st.cache_resource
 def get_llm_chain():
