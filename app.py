@@ -6,6 +6,7 @@ import time
 import os
 from dotenv import load_dotenv
 import openai
+from openai import OpenAI
 from openai import AuthenticationError
 
 from langchain.memory import ConversationSummaryMemory
@@ -46,7 +47,9 @@ if openai_api_key:
     try:
         # Attempt to list models to validate the API key
         openai.api_key = openai_api_key
-        openai.Model.list()
+        client = OpenAI(api_key="OPENAI_API_KEY")
+        models = client.models.list()
+        #openai.Model.list()
     except AuthenticationError:
         st.error("Invalid OpenAI API key provided. Please check your key.")
         st.stop()
@@ -69,7 +72,7 @@ def  get_llm():
         # Attempt to create a ChatOpenAI instance to validate the API key
         openai.api_key = openai_api_key
         # If the API key is invalid, this will raise an AuthenticationError
-        openai.Model.list()  # This checks if the API key is valid
+        # openai.Model.list()  # This checks if the API key is valid
         return ChatOpenAI(model=model, openai_api_key=openai_api_key)
     except AuthenticationError:
         st.error("Invalid OpenAI API key provided. Please check your key.")
