@@ -49,7 +49,7 @@ if openai_api_key:
         openai.api_key = openai_api_key
         client = OpenAI(api_key="OPENAI_API_KEY")
         models = client.models.list()
-        #openai.Model.list()
+        openai.Model.list()
     except AuthenticationError:
         st.error("Invalid OpenAI API key provided. Please check your key.")
         st.stop()
