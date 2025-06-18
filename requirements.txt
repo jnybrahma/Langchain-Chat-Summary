@@ -3,4 +3,4 @@ langchain
 langchain-openai
 streamlit
 langchain-core
-openai==0.28
+openai
